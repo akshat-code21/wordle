@@ -100,6 +100,7 @@ export default function LandingPage() {
                                             <li>Daily challenges with new words</li>
                                             <li>Track your statistics</li>
                                             <li>Share your results with friends</li>
+                                            <li>View your word history</li>
                                         </ul>
                                     </CardContent>
                                 </Card>
@@ -120,6 +121,13 @@ export default function LandingPage() {
                                 className="hover:bg-accent/20 cursor-pointer"
                             >
                                 Learn More
+                            </Button>
+                            <Button
+                                size="lg"
+                                onClick={() => navigate("/word-history")}
+                                className="bg-primary hover:bg-primary/80 text-primary-foreground px-8 cursor-pointer"
+                            >
+                                Word History
                             </Button>
                         </CardFooter>
                     </Card>

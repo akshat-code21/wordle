@@ -2,7 +2,12 @@ import axios from 'axios';
 
 const DATAMUSE_API_URL = 'https://api.datamuse.com/words';
 
-export async function generateWord(length: number): Promise<string> {
+interface WordData {
+    word: string;
+    definition: string;
+}
+
+export async function generateWord(length: number): Promise<WordData> {
     try {
         const response = await axios.get(DATAMUSE_API_URL, {
             params: {
@@ -17,7 +22,17 @@ export async function generateWord(length: number): Promise<string> {
         }
 
         const randomIndex = Math.floor(Math.random() * response.data.length);
-        return response.data[randomIndex].word;
+        const selectedWord = response.data[randomIndex];
+        
+        let definition = 'No definition available';
+        if (selectedWord.defs && selectedWord.defs.length > 0) {
+            definition = selectedWord.defs[0];
+        }
+
+        return {
+            word: selectedWord.word,
+            definition
+        };
     } catch (error) {
         console.error('Error generating word:', error);
         throw new Error('Failed to generate word');

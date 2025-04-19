@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import Game from './pages/Game'
 import Statistics from './pages/Statistics'
 import HowToPlay from './pages/HowToPlay'
+import WordHistory from './pages/WordHistory'
 
 function App() {
   useEffect(() => {
@@ -19,6 +20,7 @@ function App() {
           <Route path='/game' element={<Game />} />
           <Route path='/stats' element={<Statistics />} />
           <Route path='/how-to-play' element={<HowToPlay />} />
+          <Route path='/word-history' element={<WordHistory />} />
         </Routes>
       </BrowserRouter>
     </>

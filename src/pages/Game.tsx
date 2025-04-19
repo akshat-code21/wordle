@@ -1,10 +1,11 @@
-import { Repeat2,ArrowLeft, BarChart } from "lucide-react";
+import { Repeat2,ArrowLeft, BarChart, BookMarked } from "lucide-react";
 import { useEffect, useState } from "react";
 import { generateWord } from "../lib/generateWord";
 import Modal from "../components/Modal";
 import "../animations.css";
 import { useNavigate } from "react-router-dom";
 import { useStatistics } from "../store/StatisticsContext";
+import { useWordHistory } from "../store/WordHistoryContext";
 
 interface Tile {
     letter: string;
@@ -19,7 +20,9 @@ type KeyboardState = {
 export default function Game() {
     const navigate = useNavigate();
     const { statistics, updateStatistics } = useStatistics();
+    const { addWordToHistory } = useWordHistory();
     const [word, setWord] = useState<string>('');
+    const [currentDefinition, setCurrentDefinition] = useState<string>('');
     const [currentRow, setCurrentRow] = useState(0);
     const [currentCol, setCurrentCol] = useState(0);
     const [gameOver, setGameOver] = useState(false);
@@ -39,8 +42,9 @@ export default function Game() {
     }, []);
 
     const startNewGame = async () => {
-        const newWord = await generateWord(5);
-        setWord(newWord);
+        const wordData = await generateWord(5);
+        setWord(wordData.word);
+        setCurrentDefinition(wordData.definition);
         setCurrentRow(0);
         setCurrentCol(0);
         setGameOver(false);
@@ -133,6 +137,7 @@ export default function Game() {
                 totalGames: statistics.totalGames + 1,
                 totalWins: statistics.totalWins + 1
             });
+            addWordToHistory(word, currentDefinition);
             
             setGameResult({
                 title: 'Congratulations! 🎉',
@@ -145,6 +150,7 @@ export default function Game() {
                 totalGames: statistics.totalGames + 1,
                 totalWins: statistics.totalWins
             });
+            addWordToHistory(word, currentDefinition);
             
             setGameResult({
                 title: 'Game Over!',
@@ -215,12 +221,20 @@ export default function Game() {
                     </button>
                 </div>
                 
-                <button 
-                    className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
-                    onClick={() => navigate("/stats")}
-                >
-                    <BarChart className="w-6 h-6" />
-                </button>
+                <div className="flex gap-2">
+                    <button 
+                        className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                        onClick={() => navigate("/stats")}
+                    >
+                        <BarChart className="w-6 h-6" />
+                    </button>
+                    <button 
+                        className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                        onClick={() => navigate("/word-history")}
+                    >
+                        <BookMarked className="w-6 h-6" />
+                    </button>
+                </div>
             </div>
 
             <div className="flex flex-col gap-4">
