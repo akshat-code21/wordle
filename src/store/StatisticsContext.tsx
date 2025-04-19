@@ -11,6 +11,7 @@ export const StatisticsContext = createContext({
         totalGames: 0,
         totalWins: 0,
     },
+    // @ts-ignore
     updateStatistics: (newStatistics: Statistics) => {},
 });
 
