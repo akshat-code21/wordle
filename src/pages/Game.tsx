@@ -299,6 +299,7 @@ export default function Game() {
                 title={gameResult.title}
                 message={gameResult.message}
                 word={!gameResult.title.includes('Congratulations') ? word : undefined}
+                statistics={statistics}
             />
         </div>
     );

@@ -1,10 +1,17 @@
 import { ArrowLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { useStatistics } from "../store/StatisticsContext";
+import { useEffect, useState } from "react";
 
 export default function Statistics() {
     const navigate = useNavigate();
     const { statistics } = useStatistics();
+    const [isDataPersisted, setIsDataPersisted] = useState(false);
+    
+    useEffect(() => {
+        const savedStats = localStorage.getItem('wordleStats');
+        setIsDataPersisted(!!savedStats);
+    }, []);
     
     const winPercentage = statistics.totalGames > 0 
         ? Math.round((statistics.totalWins / statistics.totalGames) * 100) 
@@ -22,10 +29,16 @@ export default function Statistics() {
                 
                 <h1 className="text-4xl font-bold">Statistics</h1>
                 
-                <div className="w-12 h-12"></div> {/* Empty div for layout balance */}
+                <div className="w-12 h-12"></div> 
             </div>
 
             <div className="w-full max-w-md bg-card/50 rounded-lg p-6 shadow-md">
+                {isDataPersisted && (
+                    <div className="mb-4 text-center text-sm text-green-400">
+                        Your statistics are saved automatically
+                    </div>
+                )}
+
                 <div className="grid grid-cols-3 gap-4 mb-8">
                     <div className="flex flex-col items-center">
                         <span className="text-3xl font-bold">{statistics.totalGames}</span>
@@ -53,6 +66,15 @@ export default function Statistics() {
                             <span className="text-sm text-muted-foreground">losses</span>
                         </div>
                     </div>
+                </div>
+
+                <div className="mt-6 text-center">
+                    <button 
+                        onClick={() => navigate("/game")}
+                        className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/80 transition-colors"
+                    >
+                        Play Again
+                    </button>
                 </div>
             </div>
         </div>

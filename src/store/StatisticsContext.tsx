@@ -1,20 +1,39 @@
-import { createContext, useContext, useState } from "react"
+import { createContext, useContext, useState, useEffect } from "react"
+
+
+interface Statistics {
+    totalGames: number;
+    totalWins: number;
+}
 
 export const StatisticsContext = createContext({
     statistics: {
         totalGames: 0,
         totalWins: 0,
     },
-    updateStatistics: (newStatistics: { totalGames: number; totalWins: number }) => {},
+    updateStatistics: (newStatistics: Statistics) => {},
 });
 
 export const StatisticsProvider = ({ children }: { children: React.ReactNode }) => {
-    const [statistics, setStatistics] = useState({
-        totalGames: 0,
-        totalWins: 0,
+
+    const [statistics, setStatistics] = useState<Statistics>(() => {
+        const savedStats = localStorage.getItem('wordleStats');
+        if (savedStats) {
+            try {
+                return JSON.parse(savedStats);
+            } catch (error) {
+                console.error('Error parsing stats from localStorage:', error);
+                return { totalGames: 0, totalWins: 0 };
+            }
+        }
+        return { totalGames: 0, totalWins: 0 };
     });
 
-    const updateStatistics = (newStatistics: { totalGames: number; totalWins: number }) => {
+    useEffect(() => {
+        localStorage.setItem('wordleStats', JSON.stringify(statistics));
+    }, [statistics]);
+
+    const updateStatistics = (newStatistics: Statistics) => {
         setStatistics(newStatistics);
     };
 
