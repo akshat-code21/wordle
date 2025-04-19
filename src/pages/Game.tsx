@@ -1,4 +1,4 @@
-import { Repeat2,ArrowLeft, BarChart, BookMarked } from "lucide-react";
+import { Repeat2,ArrowLeft, BarChart, BookMarked, User } from "lucide-react";
 import { useEffect, useState } from "react";
 import { generateWord } from "../lib/generateWord";
 import Modal from "../components/Modal";
@@ -6,6 +6,7 @@ import "../animations.css";
 import { useNavigate } from "react-router-dom";
 import { useStatistics } from "../store/StatisticsContext";
 import { useWordHistory } from "../store/WordHistoryContext";
+import { useUser } from "../store/UserContext";
 
 interface Tile {
     letter: string;
@@ -21,6 +22,7 @@ export default function Game() {
     const navigate = useNavigate();
     const { statistics, updateStatistics } = useStatistics();
     const { addWordToHistory } = useWordHistory();
+    const { userProfile, isLoggedIn } = useUser();
     const [word, setWord] = useState<string>('');
     const [currentDefinition, setCurrentDefinition] = useState<string>('');
     const [currentRow, setCurrentRow] = useState(0);
@@ -187,7 +189,7 @@ export default function Game() {
     };
 
     const getKeyboardButtonClass = (letter: string) => {
-        const baseClass = "w-12 h-14 rounded-md flex items-center justify-center cursor-pointer transition-colors";
+        const baseClass = "w-8 h-10 sm:w-11 md:w-12 sm:h-12 md:h-14 rounded-md flex items-center justify-center cursor-pointer transition-colors";
         
         switch (keyboardState[letter]) {
             case 'correct':
@@ -202,48 +204,61 @@ export default function Game() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center justify-between py-8 px-4">
+        <div className="min-h-screen flex flex-col items-center justify-between py-4 sm:py-6 md:py-8 px-2 sm:px-4">
             <div className="flex flex-row items-center justify-between w-full max-w-4xl">
                 <button 
-                    onClick={() => navigate("/")}
-                    className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                    onClick={() => navigate(-1)}
+                    className="cursor-pointer w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                 </button>
                 
-                <div className="flex flex-row items-center gap-3">
-                    <h1 className="text-6xl font-bold">Guess the Word !</h1>
+                <div className="flex flex-row items-center gap-2 sm:gap-3">
+                    <h1 className="text-2xl sm:text-4xl md:text-6xl font-bold">Guess the Word !</h1>
                     <button
                         onClick={startNewGame}
-                        className="w-12 h-12 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                        className="w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
                     >
-                        <Repeat2 className="w-6 h-6" />
+                        <Repeat2 className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </button>
                 </div>
                 
-                <div className="flex gap-2">
+                <div className="flex gap-1 sm:gap-2">
                     <button 
-                        className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
-                        onClick={() => navigate("/stats")}
+                        className="cursor-pointer w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                        onClick={() => navigate("/profile")}
+                        title={isLoggedIn ? `Profile: ${userProfile?.username}` : "Sign In"}
                     >
-                        <BarChart className="w-6 h-6" />
+                        <User className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </button>
                     <button 
-                        className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                        className="cursor-pointer w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                        onClick={() => navigate("/stats")}
+                    >
+                        <BarChart className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
+                    </button>
+                    <button 
+                        className="cursor-pointer w-9 h-9 sm:w-11 sm:h-11 md:w-12 md:h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
                         onClick={() => navigate("/word-history")}
                     >
-                        <BookMarked className="w-6 h-6" />
+                        <BookMarked className="w-4 h-4 sm:w-5 sm:h-5 md:w-6 md:h-6" />
                     </button>
                 </div>
             </div>
 
-            <div className="flex flex-col gap-4">
+            {isLoggedIn && (
+                <div className="text-sm text-muted-foreground mt-2">
+                    Playing as: <span className="font-semibold">{userProfile?.username}</span>
+                </div>
+            )}
+
+            <div className="flex flex-col gap-2 sm:gap-3 md:gap-4 my-6">
                 {board.map((row, rowIndex) => (
-                    <div key={rowIndex} className="flex flex-row gap-2">
+                    <div key={rowIndex} className="flex flex-row gap-1 sm:gap-2">
                         {row.map((tile, colIndex) => (
                             <div
                                 key={`${rowIndex}-${colIndex}`}
-                                className={`w-14 h-14 rounded-md border-2 flex items-center justify-center text-2xl font-bold
+                                className={`w-10 h-10 sm:w-12 sm:h-12 md:w-14 md:h-14 rounded-md border-2 flex items-center justify-center text-base sm:text-xl md:text-2xl font-bold
                                     ${tile.isFlipping ? 'rotate-y-180' : ''}
                                     ${tile.state === 'empty' ? 'bg-card border-card/20' :
                                         tile.state === 'correct' ? 'bg-green-500 border-green-500' :
@@ -257,8 +272,8 @@ export default function Game() {
                 ))}
             </div>
 
-            <div className="flex flex-col items-center gap-3 w-full max-w-2xl">
-                <div className="flex gap-1.5">
+            <div className="flex flex-col items-center gap-1.5 sm:gap-2 md:gap-3 w-full max-w-xl sm:max-w-2xl mb-4">
+                <div className="flex gap-0.5 sm:gap-1 md:gap-1.5">
                     {['Q', 'W', 'E', 'R', 'T', 'Y', 'U', 'I', 'O', 'P'].map((letter) => (
                         <button
                             key={letter}
@@ -266,12 +281,13 @@ export default function Game() {
                             className={getKeyboardButtonClass(letter)}
                             disabled={keyboardState[letter] === 'absent'}
                         >
-                            <span className="text-lg font-medium">{letter}</span>
+                            <span className="text-sm sm:text-base md:text-lg font-medium">{letter}</span>
                         </button>
                     ))}
                 </div>
 
-                <div className="flex gap-1.5">
+                <div className="flex gap-0.5 sm:gap-1 md:gap-1.5">
+                    <div className="w-4 sm:w-5 md:w-6"></div> {/* Spacing for alignment */}
                     {['A', 'S', 'D', 'F', 'G', 'H', 'J', 'K', 'L'].map((letter) => (
                         <button
                             key={letter}
@@ -279,12 +295,14 @@ export default function Game() {
                             className={getKeyboardButtonClass(letter)}
                             disabled={keyboardState[letter] === 'absent'}
                         >
-                            <span className="text-lg font-medium">{letter}</span>
+                            <span className="text-sm sm:text-base md:text-lg font-medium">{letter}</span>
                         </button>
                     ))}
+                    <div className="w-4 sm:w-5 md:w-6"></div> {/* Spacing for alignment */}
                 </div>
 
-                <div className="flex gap-1.5">
+                <div className="flex gap-0.5 sm:gap-1 md:gap-1.5">
+                    <div className="w-8"></div> {/* Spacing for alignment */}
                     {['Z', 'X', 'C', 'V', 'B', 'N', 'M'].map((letter) => (
                         <button
                             key={letter}
@@ -292,14 +310,14 @@ export default function Game() {
                             className={getKeyboardButtonClass(letter)}
                             disabled={keyboardState[letter] === 'absent'}
                         >
-                            <span className="text-lg font-medium">{letter}</span>
+                            <span className="text-sm sm:text-base md:text-lg font-medium">{letter}</span>
                         </button>
                     ))}
                     <button
                         onClick={() => handleKeyPress('BACKSPACE')}
-                        className="w-16 h-14 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                        className="w-12 h-10 sm:w-14 sm:h-12 md:w-16 md:h-14 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
                     >
-                        <span className="text-lg font-medium">⌫</span>
+                        <span className="text-sm sm:text-base md:text-lg font-medium">⌫</span>
                     </button>
                 </div>
             </div>

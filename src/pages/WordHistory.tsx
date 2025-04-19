@@ -38,36 +38,36 @@ export default function WordHistory() {
     };
 
     return (
-        <div className="min-h-screen flex flex-col items-center py-8 px-4">
-            <div className="flex flex-row items-center justify-between w-full max-w-4xl mb-8">
+        <div className="min-h-screen flex flex-col items-center py-6 px-3 sm:py-8 sm:px-4">
+            <div className="flex flex-row items-center justify-between w-full max-w-4xl mb-6 sm:mb-8">
                 <button 
-                    onClick={() => navigate("/game")}
-                    className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                    onClick={() => navigate(-1)}
+                    className="cursor-pointer w-10 h-10 sm:w-12 sm:h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
                 >
-                    <ArrowLeft className="w-6 h-6" />
+                    <ArrowLeft className="w-5 h-5 sm:w-6 sm:h-6" />
                 </button>
                 
-                <h1 className="text-4xl font-bold">Word History</h1>
+                <h1 className="text-2xl sm:text-4xl font-bold">Word History</h1>
                 
-                <div className="w-12 h-12"></div> 
+                <div className="w-10 h-10 sm:w-12 sm:h-12"></div> 
             </div>
 
-            <div className="w-full max-w-2xl">
+            <div className="w-full max-w-2xl px-2 sm:px-0">
                 {wordHistory.length === 0 ? (
-                    <div className="bg-card/50 rounded-lg p-6 text-center">
-                        <p className="text-muted-foreground">No word history yet. Play some games to see your word history!</p>
+                    <div className="bg-card/50 rounded-lg p-4 sm:p-6 text-center">
+                        <p className="text-sm sm:text-base text-muted-foreground">No word history yet. Play some games to see your word history!</p>
                     </div>
                 ) : (
-                    <div className="flex flex-col gap-4">
+                    <div className="flex flex-col gap-3 sm:gap-4">
                         {wordHistory.map((entry, index) => (
-                            <div key={index} className="bg-card/50 rounded-lg p-6 shadow-md">
-                                <div className="flex justify-between items-center mb-2">
-                                    <h2 className="text-2xl font-bold uppercase">{entry.word}</h2>
-                                    <span className="text-sm text-muted-foreground">{formatDate(entry.date)}</span>
+                            <div key={index} className="bg-card/50 rounded-lg p-4 sm:p-6 shadow-md">
+                                <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-2 gap-1 sm:gap-0">
+                                    <h2 className="text-xl sm:text-2xl font-bold uppercase">{entry.word}</h2>
+                                    <span className="text-xs sm:text-sm text-muted-foreground">{formatDate(entry.date)}</span>
                                 </div>
-                                <div className="mt-2 p-4 bg-background rounded-md">
-                                    <h3 className="font-semibold mb-1">Definition:</h3>
-                                    <p>{formatDefinition(entry.definition)}</p>
+                                <div className="mt-2 p-3 sm:p-4 bg-background rounded-md">
+                                    <h3 className="text-sm sm:text-base font-semibold mb-1">Definition:</h3>
+                                    <p className="text-sm sm:text-base">{formatDefinition(entry.definition)}</p>
                                 </div>
                             </div>
                         ))}

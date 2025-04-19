@@ -1,54 +1,91 @@
-# React + TypeScript + Vite
+# Wordle Game
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A modern implementation of the popular word-guessing game Wordle, built with React, TypeScript, and Vite.
 
-Currently, two official plugins are available:
+## 🎮 Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Classic Wordle gameplay - guess the 5-letter word in 6 tries
+- Color-coded feedback on your guesses
+- Word definitions for learning
+- Statistics tracking
+- Word history
+- User profiles
+- Mobile-responsive design
 
-## Expanding the ESLint configuration
+## 🚀 Demo
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+[Play Wordle Game](https://wordle-1.vercel.app)
 
-```js
-export default tseslint.config({
-  extends: [
-    // Remove ...tseslint.configs.recommended and replace with this
-    ...tseslint.configs.recommendedTypeChecked,
-    // Alternatively, use this for stricter rules
-    ...tseslint.configs.strictTypeChecked,
-    // Optionally, add this for stylistic rules
-    ...tseslint.configs.stylisticTypeChecked,
-  ],
-  languageOptions: {
-    // other options...
-    parserOptions: {
-      project: ['./tsconfig.node.json', './tsconfig.app.json'],
-      tsconfigRootDir: import.meta.dirname,
-    },
-  },
-})
+## 🛠️ Tech Stack
+
+- **Frontend**: React 19, TypeScript
+- **Styling**: TailwindCSS 4
+- **Routing**: React Router DOM 7
+- **Animation**: Framer Motion
+- **Development**: Vite 6
+- **UI Components**: Custom components with Radix UI primitives
+
+## 📥 Installation
+
+1. Clone the repository
+   ```bash
+   git clone https://github.com/<your-username>/wordle.git
+   cd wordle
+   ```
+
+2. Install dependencies
+   ```bash
+   npm install
+   # or
+   yarn install
+   # or
+   bun install
+   ```
+
+3. Start the development server
+   ```bash
+   npm run dev
+   # or
+   yarn dev
+   # or
+   bun dev
+   ```
+
+4. Open your browser and navigate to `http://localhost:5173`
+
+## 🏗️ Build
+
+```bash
+npm run build
+# or
+yarn build
+# or
+bun build
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🔍 How to Play
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+1. You have six attempts to guess a five-letter word.
+2. Type a word and press Enter.
+3. After each guess, the color of the tiles will change:
+   - 🟩 Green: The letter is correct and in the correct position.
+   - 🟨 Yellow: The letter is in the word but in the wrong position.
+   - ⬛ Gray: The letter is not in the word.
+4. Keep guessing until you find the word or run out of attempts!
 
-export default tseslint.config({
-  plugins: {
-    // Add the react-x and react-dom plugins
-    'react-x': reactX,
-    'react-dom': reactDom,
-  },
-  rules: {
-    // other rules...
-    // Enable its recommended typescript rules
-    ...reactX.configs['recommended-typescript'].rules,
-    ...reactDom.configs.recommended.rules,
-  },
-})
+## 🧩 Project Structure
+
+```
+/
+├── public/          # Static assets
+├── src/
+│   ├── assets/      # Images and other assets
+│   ├── components/  # Reusable UI components
+│   ├── lib/         # Utility functions and helpers
+│   ├── pages/       # Page components
+│   ├── store/       # Context providers and state management
+│   ├── App.tsx      # Main application component
+│   ├── main.tsx     # Application entry point
+│   └── ...
+└── ...
 ```
