@@ -3,6 +3,8 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom'
 import LandingPage from './pages/LandingPage'
 import { useEffect } from 'react'
 import Game from './pages/Game'
+import Statistics from './pages/Statistics'
+import HowToPlay from './pages/HowToPlay'
 
 function App() {
   useEffect(() => {
@@ -15,7 +17,8 @@ function App() {
         <Routes>
           <Route path='/' element={<LandingPage />} />
           <Route path='/game' element={<Game />} />
-          <Route path='/how-to-play' element={<div className="h-screen flex items-center justify-center"><h1 className="text-2xl">How To Play Coming Soon</h1></div>} />
+          <Route path='/stats' element={<Statistics />} />
+          <Route path='/how-to-play' element={<HowToPlay />} />
         </Routes>
       </BrowserRouter>
     </>

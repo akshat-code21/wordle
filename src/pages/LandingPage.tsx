@@ -131,25 +131,25 @@ export default function LandingPage() {
                     </div>
                     <div className="flex justify-center my-4">
                         <div className="grid grid-cols-5 gap-2">
-                            <div className="w-14 h-14 flex items-center justify-center bg-primary text-primary-foreground text-2xl font-bold rounded-md border-2 border-primary/50">H</div>
-                            <div className="w-14 h-14 flex items-center justify-center bg-accent text-accent-foreground text-2xl font-bold rounded-md border-2 border-accent/50">E</div>
-                            <div className="w-14 h-14 flex items-center justify-center bg-muted text-muted-foreground text-2xl font-bold rounded-md border-2 border-muted/50">A</div>
-                            <div className="w-14 h-14 flex items-center justify-center bg-accent text-accent-foreground text-2xl font-bold rounded-md border-2 border-accent/50">R</div>
-                            <div className="w-14 h-14 flex items-center justify-center bg-muted text-muted-foreground text-2xl font-bold rounded-md border-2 border-muted/50">T</div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-green-500 text-white text-2xl font-bold rounded-md border-2 border-green-500">H</div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-yellow-500 text-white text-2xl font-bold rounded-md border-2 border-yellow-500">E</div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-gray-500 text-white text-2xl font-bold rounded-md border-2 border-gray-500">A</div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-yellow-500 text-white text-2xl font-bold rounded-md border-2 border-yellow-500">R</div>
+                            <div className="w-14 h-14 flex items-center justify-center bg-gray-500 text-white text-2xl font-bold rounded-md border-2 border-gray-500">T</div>
                         </div>
                     </div>
                     <div className="text-center text-sm text-muted-foreground">
                         <div className="flex justify-center gap-6 mt-4">
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-primary rounded-sm"></div>
+                                <div className="w-4 h-4 bg-green-500 rounded-sm"></div>
                                 <span>Correct spot</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-accent rounded-sm"></div>
+                                <div className="w-4 h-4 bg-yellow-500 rounded-sm"></div>
                                 <span>Wrong spot</span>
                             </div>
                             <div className="flex items-center gap-2">
-                                <div className="w-4 h-4 bg-muted rounded-sm"></div>
+                                <div className="w-4 h-4 bg-gray-500 rounded-sm"></div>
                                 <span>Not in word</span>
                             </div>
                         </div>

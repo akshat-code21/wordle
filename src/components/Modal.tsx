@@ -31,7 +31,7 @@ export default function Modal({ isOpen, onClose, title, message, word }: ModalPr
                 )}
                 <button
                     onClick={onClose}
-                    className="mt-6 w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
+                    className="cursor-pointer mt-6 w-full bg-primary text-primary-foreground py-2 px-4 rounded-md hover:bg-primary/90 transition-colors"
                 >
                     Play Again
                 </button>

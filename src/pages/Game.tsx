@@ -1,8 +1,10 @@
-import { Repeat2 } from "lucide-react";
+import { Repeat2,ArrowLeft, BarChart } from "lucide-react";
 import { useEffect, useState } from "react";
 import { generateWord } from "../lib/generateWord";
 import Modal from "../components/Modal";
 import "../animations.css";
+import { useNavigate } from "react-router-dom";
+import { useStatistics } from "../store/StatisticsContext";
 
 interface Tile {
     letter: string;
@@ -10,7 +12,13 @@ interface Tile {
     isFlipping?: boolean;
 }
 
+type KeyboardState = {
+    [key: string]: 'unused' | 'correct' | 'present' | 'absent';
+};
+
 export default function Game() {
+    const navigate = useNavigate();
+    const { statistics, updateStatistics } = useStatistics();
     const [word, setWord] = useState<string>('');
     const [currentRow, setCurrentRow] = useState(0);
     const [currentCol, setCurrentCol] = useState(0);
@@ -21,6 +29,9 @@ export default function Game() {
         Array(6).fill(null).map(() =>
             Array(5).fill(null).map(() => ({ letter: '', state: 'empty' }))
         )
+    );
+    const [keyboardState, setKeyboardState] = useState<KeyboardState>(
+        Object.fromEntries([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(letter => [letter, 'unused']))
     );
 
     useEffect(() => {
@@ -37,6 +48,9 @@ export default function Game() {
         setBoard(Array(6).fill(null).map(() =>
             Array(5).fill(null).map(() => ({ letter: '', state: 'empty' }))
         ));
+        setKeyboardState(
+            Object.fromEntries([...'ABCDEFGHIJKLMNOPQRSTUVWXYZ'].map(letter => [letter, 'unused']))
+        );
     };
 
     const checkGuess = async () => {
@@ -66,6 +80,23 @@ export default function Game() {
 
         let newBoard = [...board];
 
+        // Update keyboard state based on tile states
+        const newKeyboardState = { ...keyboardState };
+        for (let i = 0; i < 5; i++) {
+            const letter = board[currentRow][i].letter;
+            const state = tileStates[i];
+            
+            // Only update if the new state has higher priority
+            // Priority: correct > present > absent > unused
+            if (
+                (state === 'correct') || 
+                (state === 'present' && newKeyboardState[letter] !== 'correct') ||
+                (state === 'absent' && newKeyboardState[letter] !== 'correct' && newKeyboardState[letter] !== 'present')
+            ) {
+                newKeyboardState[letter] = state;
+            }
+        }
+        setKeyboardState(newKeyboardState);
 
         for (let i = 0; i < 5; i++) {
             newBoard = [...newBoard];
@@ -101,6 +132,11 @@ export default function Game() {
         const isCorrect = guess === targetWord;
 
         if (isCorrect) {
+            updateStatistics({
+                totalGames: statistics.totalGames + 1,
+                totalWins: statistics.totalWins + 1
+            });
+            
             setGameResult({
                 title: 'Congratulations! 🎉',
                 message: 'You guessed the word correctly!'
@@ -108,6 +144,11 @@ export default function Game() {
             setGameOver(true);
             setShowModal(true);
         } else if (currentRow === 5) {
+            updateStatistics({
+                totalGames: statistics.totalGames + 1,
+                totalWins: statistics.totalWins
+            });
+            
             setGameResult({
                 title: 'Game Over!',
                 message: 'Better luck next time!'
@@ -122,6 +163,7 @@ export default function Game() {
 
     const handleKeyPress = (key: string) => {
         if (gameOver) return;
+        if (key !== 'BACKSPACE' && keyboardState[key] === 'absent') return; // Prevent using letters marked as absent
 
         if (key === 'BACKSPACE') {
             if (currentCol > 0) {
@@ -141,15 +183,46 @@ export default function Game() {
         }
     };
 
+    const getKeyboardButtonClass = (letter: string) => {
+        const baseClass = "w-12 h-14 rounded-md flex items-center justify-center cursor-pointer transition-colors";
+        
+        switch (keyboardState[letter]) {
+            case 'correct':
+                return `${baseClass} bg-green-500 border-green-500 text-white`;
+            case 'present':
+                return `${baseClass} bg-yellow-500 border-yellow-500 text-white`;
+            case 'absent':
+                return `${baseClass} bg-gray-500 border-gray-500 text-white opacity-70`;
+            default:
+                return `${baseClass} bg-card hover:bg-card/80`;
+        }
+    };
+
     return (
         <div className="min-h-screen flex flex-col items-center justify-between py-8 px-4">
-            <div className="flex flex-row items-center gap-3">
-                <h1 className="text-6xl font-bold">Guess the Word !</h1>
-                <button
-                    onClick={startNewGame}
-                    className="w-12 h-12 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+            <div className="flex flex-row items-center justify-between w-full max-w-4xl">
+                <button 
+                    onClick={() => navigate("/")}
+                    className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
                 >
-                    <Repeat2 className="w-6 h-6" />
+                    <ArrowLeft className="w-6 h-6" />
+                </button>
+                
+                <div className="flex flex-row items-center gap-3">
+                    <h1 className="text-6xl font-bold">Guess the Word !</h1>
+                    <button
+                        onClick={startNewGame}
+                        className="w-12 h-12 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                    >
+                        <Repeat2 className="w-6 h-6" />
+                    </button>
+                </div>
+                
+                <button 
+                    className="cursor-pointer w-12 h-12 bg-card rounded-md flex items-center justify-center hover:bg-card/80 transition-colors"
+                    onClick={() => navigate("/stats")}
+                >
+                    <BarChart className="w-6 h-6" />
                 </button>
             </div>
 
@@ -179,7 +252,8 @@ export default function Game() {
                         <button
                             key={letter}
                             onClick={() => handleKeyPress(letter)}
-                            className="w-12 h-14 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                            className={getKeyboardButtonClass(letter)}
+                            disabled={keyboardState[letter] === 'absent'}
                         >
                             <span className="text-lg font-medium">{letter}</span>
                         </button>
@@ -191,7 +265,8 @@ export default function Game() {
                         <button
                             key={letter}
                             onClick={() => handleKeyPress(letter)}
-                            className="w-12 h-14 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                            className={getKeyboardButtonClass(letter)}
+                            disabled={keyboardState[letter] === 'absent'}
                         >
                             <span className="text-lg font-medium">{letter}</span>
                         </button>
@@ -203,7 +278,8 @@ export default function Game() {
                         <button
                             key={letter}
                             onClick={() => handleKeyPress(letter)}
-                            className="w-12 h-14 bg-card rounded-md flex items-center justify-center cursor-pointer hover:bg-card/80 transition-colors"
+                            className={getKeyboardButtonClass(letter)}
+                            disabled={keyboardState[letter] === 'absent'}
                         >
                             <span className="text-lg font-medium">{letter}</span>
                         </button>
