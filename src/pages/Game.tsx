@@ -80,14 +80,11 @@ export default function Game() {
 
         let newBoard = [...board];
 
-        // Update keyboard state based on tile states
         const newKeyboardState = { ...keyboardState };
         for (let i = 0; i < 5; i++) {
             const letter = board[currentRow][i].letter;
             const state = tileStates[i];
             
-            // Only update if the new state has higher priority
-            // Priority: correct > present > absent > unused
             if (
                 (state === 'correct') || 
                 (state === 'present' && newKeyboardState[letter] !== 'correct') ||
@@ -163,7 +160,7 @@ export default function Game() {
 
     const handleKeyPress = (key: string) => {
         if (gameOver) return;
-        if (key !== 'BACKSPACE' && keyboardState[key] === 'absent') return; // Prevent using letters marked as absent
+        if (key !== 'BACKSPACE' && keyboardState[key] === 'absent') return; 
 
         if (key === 'BACKSPACE') {
             if (currentCol > 0) {
